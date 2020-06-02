@@ -36,6 +36,9 @@ jobs:
       - name: Refresh environment
         run: refreshenv
 
+      - name: List environment
+        run: SET
+
       # BUILD
 
       - name: Check out
