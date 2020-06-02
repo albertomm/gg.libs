@@ -37,7 +37,7 @@ jobs:
         run: refreshenv
 
       - name: List environment
-        run: SET
+        run: "ls env:"
 
       # BUILD
 
