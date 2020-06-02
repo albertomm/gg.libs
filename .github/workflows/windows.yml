@@ -34,7 +34,7 @@ jobs:
         run: choco install vulkan-sdk
 
       - name: Refresh environment
-        run: refreshenv
+        run: Update-SessionEnvironment
 
       - name: List environment
         run: "ls env:"
