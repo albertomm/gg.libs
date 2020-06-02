@@ -31,10 +31,9 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install vulkan
-        run: choco install vulkan-sdk
-
-      - name: Refresh environment
-        run: Update-SessionEnvironment
+        run: |
+          choco install vulkan-sdk
+          refreshenv
 
       - name: List environment
         run: "ls env:"
