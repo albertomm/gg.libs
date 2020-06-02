@@ -11,12 +11,15 @@ jobs:
     strategy:
       matrix:
         os: [windows-2019]
-        architecture: [Win32, x64]
-        build_type: [debug, release, distribution]
+        architecture: [x64]
+        build_type: [debug]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install vulkan
+        run: choco install vulkan-sdk
 
       - name: Create build directory
         run: cmake -E make_directory ${{runner.workspace}}/build
@@ -24,7 +27,7 @@ jobs:
       - name: Configure
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGG_OPENGL=OFF -DGG_VULKAN=OFF -DGGLIBS_ENABLE_DOC=OFF -DGGLIBS_ENABLE_TESTING=ON
+        run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGG_OPENGL=OFF -DGG_VULKAN=ON -DGGLIBS_ENABLE_DOC=OFF -DGGLIBS_ENABLE_TESTING=ON
 
       - name: Build
         shell: bash
