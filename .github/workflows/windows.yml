@@ -16,10 +16,30 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
+      # INSTALL DEPENDENCIES
+
+      - name: Activate chocolatey cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-chocolatey
+        with:
+          path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Install vulkan
         run: choco install vulkan-sdk
+
+      - name: Refresh environment
+        run: refreshenv
+
+      # BUILD
+
+      - name: Check out
+        uses: actions/checkout@v2
 
       - name: Create build directory
         run: cmake -E make_directory ${{runner.workspace}}/build
