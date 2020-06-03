@@ -36,16 +36,17 @@ jobs:
           $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
-          "ls env:"
-          echo "::set-env VULKAN_SDK=$env:VULKAN_SDK"
-          echo "::set-env VK_SDK_PATH=$env:VK_SDK_PATH"
-          echo "::set-env Path=$env:PATH"
 
-      - name: List environment variables
-        run: "ls env:"
+      # "ls env:"
+      # echo "::set-env VULKAN_SDK=$env:VULKAN_SDK"
+      # echo "::set-env VK_SDK_PATH=$env:VK_SDK_PATH"
+      # echo "::set-env Path=$env:PATH"
 
-      - name: Review chocolatey log
-        run: cat C:\ProgramData\chocolatey\logs\chocolatey.log
+      # - name: List environment variables
+      #   run: "ls env:"
+
+      # - name: Review chocolatey log
+      #   run: cat C:\ProgramData\chocolatey\logs\chocolatey.log
 
       # BUILD
 
@@ -58,12 +59,20 @@ jobs:
       - name: Configure
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGG_OPENGL=OFF -DGG_VULKAN=ON -DGGLIBS_ENABLE_DOC=OFF -DGGLIBS_ENABLE_TESTING=ON
+        run: |
+          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+          cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGG_OPENGL=OFF -DGG_VULKAN=ON -DGGLIBS_ENABLE_DOC=OFF -DGGLIBS_ENABLE_TESTING=ON
 
       - name: Build
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake --build . --config ${{ matrix.build_type }}
+        run: |
+          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+          cmake --build . --config ${{ matrix.build_type }}
 
       - name: Test
         shell: bash
