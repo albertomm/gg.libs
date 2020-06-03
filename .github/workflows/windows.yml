@@ -31,15 +31,17 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install vulkan
-        run: choco install vulkan-sdk
-
-      - name: Refresh environment
         run: |
+          choco install vulkan-sdk
           $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
+          "ls env:"
+          echo "::set-env VULKAN_SDK=$VULKAN_SDK"
+          echo "::set-env VK_SDK_PATH=$VK_SDK_PATH"
+          echo "::set-env PATH=$PATH"
 
-      - name: List environment
+      - name: List environment variables
         run: "ls env:"
 
       - name: Review chocolatey log
@@ -56,7 +58,7 @@ jobs:
       - name: Configure
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGG_OPENGL=OFF -DGG_VULKAN=OFF -DGGLIBS_ENABLE_DOC=OFF -DGGLIBS_ENABLE_TESTING=ON
+        run: cmake $GITHUB_WORKSPACE -A ${{ matrix.architecture }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGG_OPENGL=OFF -DGG_VULKAN=ON -DGGLIBS_ENABLE_DOC=OFF -DGGLIBS_ENABLE_TESTING=ON
 
       - name: Build
         shell: bash
