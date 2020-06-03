@@ -31,8 +31,12 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install vulkan
+        run: choco install vulkan-sdk
+
+      - name: Refresh environment
         run: |
-          choco install vulkan-sdk
+          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
 
       - name: List environment
